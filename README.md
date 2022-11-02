@@ -1,6 +1,9 @@
 # kbo_crowd_pred
 한국프로야구 관중수를 예측하는 웹 애플리케이션을 제작하고 배포하는 프로젝트입니다
 
+배포된 서비스 주소
+https://kbo-crowd.herokuapp.com/
+
 ### data folder
 data : 데이터를 수집하고 처리하며 적재하는 일련의 과정에 사용한 코드와 파일
 + scrape.py - 웹 스크레이핑을 이용하여 데이터 수집
