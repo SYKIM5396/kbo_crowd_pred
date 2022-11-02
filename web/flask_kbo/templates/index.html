@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>프로야구 관중 수 예측</title>
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <!-- jquery-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+</head>
+
+<style>
+    body { 
+        background-color: #F2F2F2;
+    }
+    .my-box { border:1px solid; padding:10px; }
+</style>
+
+<body >
+    <!-- As a heading -->
+
+    <div class="container row" style="float: none; margin: 10px auto;" >
+    <blockquote style="float: none; margin: 10px auto;width:500px;height:50px;" class="blockquote text-center">
+        <p class="font-weight-bold p-3 mb-2 bg-dark text-white rounded"><strong>2023 한국프로야구 관중수 예측</strong>
+        </p>
+    </blockquote>
+
+    <br><center><img  style="margin:10px auto;width:500px;" src={{ url_for('static', filename='kbo.jpg' ) }} alt="KBO"/></center>
+
+    <br><br><br><br><center>한국프로야구 페넌트레이스 경기의 관중수를 예측합니다. <br> 홈 구단을 선택하시면 구장이 자동으로 선택됩니다.</center>
+
+    <form method="POST" action="/res" id="myForm">
+      <select name="home" form="myForm" class="form-select" style="margin:5px auto;width:200px;height:50px;" id="select1" >
+        <option value="Default">홈 구단 선택</option>
+        <option value="KIA">KIA</option>
+        <option value="KT">KT</option>
+        <option value="LG">LG</option>
+        <option value="NC">NC</option>
+        <option value="SSG">SSG</option>
+        <option value="두산">두산</option>
+        <option value="롯데">롯데</option>
+        <option value="삼성">삼성</option>
+        <option value="키움">키움</option>
+        <option value="한화">한화</option>
+    </select>
+    <select name="stadium" form="myForm" class="form-select" style="margin:5px auto;width:200px;height:50px;" id="select2">
+        <option>구장 선택</option>
+    </select>
+    <select name="away" form="myForm" class="form-select" style="margin:5px auto;width:200px;height:50px;" id="select3" >
+        <option value="Default">원정 구단 선택</option>
+        <option value="KIA">KIA</option>
+        <option value="KT">KT</option>
+        <option value="LG">LG</option>
+        <option value="NC">NC</option>
+        <option value="SSG">SSG</option>
+        <option value="두산">두산</option>
+        <option value="롯데">롯데</option>
+        <option value="삼성">삼성</option>
+        <option value="키움">키움</option>
+        <option value="한화">한화</option>
+    </select>
+
+    <select name="day" form="myForm"  class="form-select" style="margin:5px auto;width:200px;height:50px;" id="select4" >
+        <option value="Default">요일 선택</option>
+        <option value="화">화요일</option>
+        <option value="수">수요일</option>
+        <option value="목">목요일</option>
+        <option value="금">금요일</option>
+        <option value="토">토요일</option>
+        <option value="일">일요일</option>
+    </select>
+    </div>
+    <div class="container row" style="float: none; margin: 5px auto;width:300px;height:50px;">
+        <button type="submit" class="btn btn-dark" id="button">예측</button>
+    </div>
+</form>
+
+
+    <script> 
+             // 홈구단 고르면 원정구단 셀렉트박스에서 홈구단 숨기는 j쿼리
+            $("#select1").change(function () {
+                switch (this.value) {
+                    case 'Default':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show();  $("#select3 option:eq(7)").show(); $("#select3 option:eq(8)").show(); $("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                        break;
+                    case 'KIA':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(1)").hide();
+                        break;
+                    case 'KT':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(2)").hide();
+                        break;
+                    case 'LG':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(3)").hide();
+                        break;
+                    case 'NC':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(4)").hide();
+                        break;
+                    case 'SSG':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(5)").hide();
+                        break;
+                    case '두산':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(6)").hide();
+                        break;
+                    case '롯데':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(7)").hide();
+                        break;
+                    case '삼성':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(8)").hide();
+                        break;
+                    case '키움':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(9)").hide();
+                        break;
+                    case '한화':
+                    $("#select3 option:eq(1)").show();  $("#select3 option:eq(2)").show(); $("#select3 option:eq(3)").show(); $("#select3 option:eq(4)").show();  $("#select3 option:eq(5)").show();
+                    $("#select3 option:eq(6)").show(); $("#select3 option:eq(7)").show();  $("#select3 option:eq(8)").show();$("#select3 option:eq(9)").show();  $("#select3 option:eq(10)").show();
+                    $("#select3 option:eq(10)").hide();
+                        break;
+        }
+    });
+     // 원정구단 고르면 홈구단 셀렉트박스에서 홈구단 숨기는 j쿼리
+        $("#select3").change(function () {
+            switch (this.value) {
+                case 'Default':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                    break;
+                case 'KIA':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(1)").hide();
+                    break;
+                case 'KT':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(2)").hide();
+                    break;
+                case 'LG':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(3)").hide();
+                    break;
+                case 'NC':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(4)").hide();
+                    break;
+                case 'SSG':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(5)").hide();
+                    break;
+                case '두산':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(6)").hide();
+                    break;
+                case '롯데':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(7)").hide();
+                    break;
+                case '삼성':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(8)").hide();
+                    break;
+                case '키움':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(9)").hide();
+                    break;
+                case '한화':
+                $("#select1 option:eq(1)").show();  $("#select1 option:eq(2)").show(); $("#select1 option:eq(3)").show(); $("#select1 option:eq(4)").show();  $("#select1 option:eq(5)").show();
+                $("#select1 option:eq(6)").show(); $("#select1 option:eq(7)").show();  $("#select1 option:eq(8)").show();$("#select1 option:eq(9)").show();  $("#select1 option:eq(10)").show();
+                $("#select1 option:eq(10)").hide();
+                    break;
+    }
+    });
+//홈구단 고르면 홈구장 골라지는 j쿼리
+    $("#select1").change(function () {
+        switch (this.value) {
+            case 'KIA':
+                $("#select2").children().remove();
+                $("#select2").append("<option value='광주' selected>광주</option>");
+                break;
+            case 'KT':
+                $("#select2").children().remove(); 
+                $("#select2").append("<option value='수원' selected>수원</option>");
+                break;
+            case 'LG':
+                $("#select2").children().remove(); 
+                $("#select2").append("<option value='잠실' selected>잠실</option>");
+                break;
+            case 'NC':
+                $("#select2").children().remove(); 
+                $("#select2").append("<option value='수원' selected>창원</option>");
+                break;
+            case 'SSG':
+                $("#select2").children().remove(); 
+                $("#select2").append("<option value='문학' selected>문학</option>");
+                break;
+            case '두산':
+                $("#select2").children().remove(); 
+                $("#select2").append("<option value='잠실' selected>잠실</option>");
+                break;
+            case '롯데':
+                $("#select2").children().remove(); 
+                $("#select2").append("<option value='field1-bar1'>구장 선택</option>");
+                $("#select2").append("<option value='사직' selected>사직</option>");
+                $("#select2").append("<option value='울산'>울산</option>");
+                break;
+            case '삼성':
+                $("#select2").children().remove(); 
+                $("#select2").append("<option value='field1-bar1'>구장 선택</option>");
+                $("#select2").append("<option value='대구' selected >대구</option>");
+                $("#select2").append("<option value='포항' >포항</option>");
+                break;
+            case '키움':
+                $("#select2").children().remove(); 
+                $("#select2").append("<option value='고척' selected>고척</option>");
+                break;
+            case '한화':
+                $("#select2").children().remove(); 
+                $("#select2").append("<option value='대전' selected>대전</option>");
+                break;
+            default:
+            $("#select2").children().remove(); 
+            $("#select2").append("<option value='field1-bar1'>구장 선택</option>");
+}
+});
+
+    </script> 
+{% if result %}
+{%if list1 %}
+<section class="py-5 text-center container">
+    <div class="my-box" style="float: none; margin: 10px auto;width:600px;">      
+        {% if ((list1[1] == "Default") or (list1[1] == None)) %}
+        <p> 홈팀을 선택하세요. </p>
+        {% elif (( list1[3] == "field1-bar1") or (list1[3] == "Default")): %}
+        <p> 구장을 선택하세요. </p>    
+        {% elif list1[2] == "Default" %}
+        <p> 원정팀을 선택하세요. </p>
+        {% elif list1[0] == "Default" %}
+    <p> 요일을 선택하세요. <p>
+    {% else %}
+    <p>홈팀 : {{list1[1]}} <br>원정팀 : {{list1[2]}}<br> {{list1[3]}}구장 {{list1[0]}}요일</p>
+    <strong style = " font-size:1.5em;">예상 관중 수는 {{result}} 명 입니다.  </strong>
+    {% endif %}
+</div>
+</section>
+{% endif %}
+{% endif %}
+
+
+    </div>
+  </nav>
+</body>
+</html>
