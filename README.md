@@ -4,6 +4,8 @@
 배포된 서비스 주소
 https://kbo-crowd.herokuapp.com/
 
+![kbo_crowd_pred](https://user-images.githubusercontent.com/110078574/199927041-dd565b59-1589-4cf3-8ca6-6387613155f6.jpg)
+
 ### data folder
 data : 데이터를 수집하고 처리하며 적재하는 일련의 과정에 사용한 코드와 파일
 + scrape.py - 웹 스크레이핑을 이용하여 데이터 수집
